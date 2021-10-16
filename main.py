@@ -1,5 +1,7 @@
 import csv
 from itertools import islice
+import random
+from random import randrange
 
 # --------------------- DATA PREPARATION ---------------------------------
 title = ""
@@ -77,32 +79,139 @@ for idx in range(len(detected_objects)):
 
 
 # write prepared data to csv file
-keys = detected_objects[0].keys()
-with open("test.csv", "w", newline="") as prepared_data:
-    writer = csv.DictWriter(prepared_data, keys)
-    writer.writeheader()
-    writer.writerows(detected_objects)
+# keys = detected_objects[0].keys()
+# with open("test.csv", "w", newline="") as prepared_data:
+#     writer = csv.DictWriter(prepared_data, keys)
+#     writer.writeheader()
+#     writer.writerows(detected_objects)
 
 
 # --------------------- STATISTICAL ANALYSE ---------------------------------
 
-not_statistic_columns = [
-    "KOI Name", 
-    "Kepler Name", 
-    "Exoplanet Archive Disposition", 
-    "Not Transit-Like False Positive Flag", 
-    "Stellar Eclipse False Positive Flag", 
-    "Centroid Offset False Positive Flag", 
-    "Ephemeris Match Indicates Contamination False Positive Flag"
-]
+# not_statistic_columns = [
+#     "KOI Name", 
+#     "Kepler Name", 
+#     "Exoplanet Archive Disposition", 
+#     "Not Transit-Like False Positive Flag", 
+#     "Stellar Eclipse False Positive Flag", 
+#     "Centroid Offset False Positive Flag", 
+#     "Ephemeris Match Indicates Contamination False Positive Flag"
+# ]
 
-# check if every value exists
+# Averages including empty cell values
+orbital_period_avg = 0
+transit_epoch_avg = 0
+impact_parameter_avg = 0
+transit_duration_avg = 0
+transit_depth_avg = 0
+planetary_radius_avg = 0
+equilibrium_temperature_avg = 0
+insolation_flux_avg = 0
+transit_signal_to_noise_avg = 0
+stellar_effective_temperature_avg = 0
+stellar_surface_gravity_avg = 0
+stellar_radius_avg = 0
+ra_avg = 0
+dec_avg = 0
+kepler_band_avg = 0
+
+rows_count = len(detected_objects)
+
 for obj in detected_objects:
     for col in obj:
-        if col not in not_statistic_columns or col == "KOI Name":
-            if obj.get(col) is None or obj.get(col) == "":
-                print(f"No value in column {col} !!!")
+        if col == "Orbital Period [days]" and obj.get(col) is not None and obj.get(col) != "":
+            orbital_period_avg = orbital_period_avg + float(obj.get(col))
+        if col == "Transit Epoch [BKJD]" and obj.get(col) is not None and obj.get(col) != "":
+            transit_epoch_avg = transit_epoch_avg + float(obj.get(col))
+        if col == "Impact Parameter" and obj.get(col) is not None and obj.get(col) != "":
+            impact_parameter_avg = impact_parameter_avg + float(obj.get(col))
+        if col == "Transit Duration [hrs]" and obj.get(col) is not None and obj.get(col) != "":
+            transit_duration_avg = transit_duration_avg + float(obj.get(col))
+        if col == "Transit Depth [ppm]" and obj.get(col) is not None and obj.get(col) != "":
+            transit_depth_avg = transit_depth_avg + float(obj.get(col))
+        if col == "Planetary Radius [Earth radii]" and obj.get(col) is not None and obj.get(col) !="":
+            planetary_radius_avg = planetary_radius_avg + float(obj.get(col))
+        if col == "Equilibrium Temperature [K]" and obj.get(col) is not None and obj.get(col) !="":
+            equilibrium_temperature_avg = equilibrium_temperature_avg + float(obj.get(col))
+        if col == "Insolation Flux [Earth flux]" and obj.get(col) is not None and obj.get(col) != "":
+            insolation_flux_avg = insolation_flux_avg + float(obj.get(col))
+        if col == "Transit Signal-to-Noise" and obj.get(col) is not None and obj.get(col) != "":
+            transit_signal_to_noise_avg = transit_signal_to_noise_avg + float(obj.get(col))
+        if col == "Stellar Effective Temperature [K]" and obj.get(col) is not None and obj.get(col) !="":
+            stellar_effective_temperature_avg = stellar_effective_temperature_avg + float(obj.get(col))
+        if col == "Stellar Surface Gravity [log10(cm/s**2)]" and obj.get(col) is not None and obj.get(col) != "":
+            stellar_surface_gravity_avg = stellar_surface_gravity_avg + float(obj.get(col))
+        if col == "Stellar Radius [Solar radii]" and obj.get(col) is not None and obj.get(col) != "":
+            stellar_radius_avg = stellar_radius_avg + float(obj.get(col))
+        if col == "RA [decimal degrees]" and obj.get(col) is not None and obj.get(col) != "":
+            ra_avg = ra_avg + float(obj.get(col))
+        if col == "Dec [decimal degrees]" and obj.get(col) is not None and obj.get(col) != "":
+            dec_avg = dec_avg + float(obj.get(col))
+        if col == "Kepler-band [mag]" and obj.get(col) is not None and obj.get(col) != "":
+            kepler_band_avg = kepler_band_avg + float(obj.get(col))
 
+orbital_period_avg = orbital_period_avg / rows_count
+transit_depth_avg = transit_depth_avg / rows_count
+impact_parameter_avg = impact_parameter_avg / rows_count
+transit_duration_avg = transit_duration_avg / rows_count
+transit_depth_avg = transit_depth_avg / rows_count
+planetary_radius_avg = planetary_radius_avg / rows_count
+equilibrium_temperature_avg = equilibrium_temperature_avg / rows_count
+insolation_flux_avg = insolation_flux_avg / rows_count
+transit_signal_to_noise_avg = transit_signal_to_noise_avg / rows_count
+stellar_effective_temperature_avg = stellar_effective_temperature_avg / rows_count
+stellar_surface_gravity_avg = stellar_surface_gravity_avg / rows_count
+ra_avg = ra_avg / rows_count
+dec_avg = dec_avg / rows_count
+kepler_band_avg = kepler_band_avg / rows_count
+
+
+# check if every value exists. if not assign avarage value or a random value if a column holds 0 or 1
+for obj in detected_objects:
+    for col in obj:
+        if obj.get(col) is None or obj.get(col) == "":
+            
+            if col == "Exoplanet Archive Disposition":
+                obj[col] = bool(random.getrandbits(1))
+            if col == "Not Transit-Like False Positive Flag":
+                obj[col] = randrange(1)
+            if col == "Stellar Eclipse Flag":
+                obj[col] = randrange(1)
+            if col == "Centroid Offset Flag":
+                obj[col] = randrange(1)
+            if col == "Ephemeris Match Indicates Contamination Flag":
+                obj[col] = randrange(1)
+            if col == "Orbital Period [days]":
+                obj[col] = orbital_period_avg
+            if col == "Transit Epoch [BKJD]":
+                obj[col] = transit_epoch_avg
+            if col == "Impact Parameter":
+                obj[col] = impact_parameter_avg
+            if col == "Transit Duration [hrs]" :
+                obj[col] = transit_duration_avg
+            if col == "Transit Depth [ppm]":
+                obj[col] = transit_depth_avg
+
+            if col == "Planetary Radius [Earth radii]":
+                obj[col] = planetary_radius_avg
+            if col == "Equilibrium Temperature [K]":
+                obj[col] = equilibrium_temperature_avg
+            if col == "Insolation Flux [Earth flux]":
+                obj[col] = insolation_flux_avg
+            if col == "Transit Signal-to-Noise" :
+                obj[col] = transit_signal_to_noise_avg
+            if col == "Stellar Effective Temperature [K]":
+                obj[col] = stellar_effective_temperature_avg
+            if col == "Stellar Surface Gravity [log10(cm/s**2)]":
+                obj[col] = stellar_surface_gravity_avg
+            if col == "Stellar Radius [Solar radii]":
+                obj[col] = stellar_radius_avg
+            if col == "RA [decimal degrees]":
+                obj[col] = ra_avg
+            if col == "Dec [decimal degrees]":
+                obj[col] = dec_avg
+            if col == "Kepler-band [mag]":
+                obj[col] = kepler_band_avg
 
 # MIN - MAX
 
@@ -246,53 +355,63 @@ for obj in detected_objects:
 
 print(f"Orbital Period Max Value - {orbital_days_max} days")
 print(f"Orbital Period Min Value - {orbital_days_min} days")  
+print(f"Orbital Period Avg Value - {orbital_period_avg} days")
 
 print(f"Transit Epoch Max Value - {transit_epoch_max} BKJD")
 print(f"Transit Epoch Min Value - {transit_epoch_min} BKJD")
+print(f"Transit Epoch Avg Value - {transit_epoch_avg} BKJD")
 
 print(f"Impact Parameter Max Value - {impact_parameter_max}")
 print(f"Impact Parameter Min Value - {impact_parameter_min}")
+print(f"Impact Parameter Avg Value - {impact_parameter_avg}")
 
 print(f"Transit Duration Max Value - {transit_duration_max} hours")
 print(f"Transit Duration Min Value - {transit_duration_min} hours")
+print(f"Transit Duration Avg Value - {transit_duration_avg} hours")
 
 print(f"Transit Depth  Max Value - {transit_depth_max} ppm")
 print(f"Transit Depth  Min Value - {transit_depth_min} ppm")
+print(f"Transit Depth  Avg Value - {transit_depth_avg} ppm")
 
 print(f"Planetary Radius  Max Value - {planetary_radius_max} Earth radii")
 print(f"Planetary Radius  Min Value - {planetary_radius_min} Earth radii")
+print(f"Planetary Radius  Avg Value - {planetary_radius_avg} Earth radii")
 
 print(f"Equilibrium Temperature  Max Value - {equilibrium_temperature_max} K")
 print(f"Equilibrium Temperature  Min Value - {equilibrium_temperature_min} K")
+print(f"Equilibrium Temperature  Avg Value - {equilibrium_temperature_avg} K")
 
 print(f"Insolation Flux Max Value - {insolation_flux_max} Earth flux")
 print(f"Insolation Flux Min Value - {insolation_flux_min} Earth flux")
+print(f"Insolation Flux Avg Value - {insolation_flux_avg} Earth flux")
 
 print(f"Transit Signal-to-Noise Max Value - {transit_signal_to_noise_max}")
 print(f"Transit Signal-to-Noise Min Value - {transit_signal_to_noise_min}")
+print(f"Transit Signal-to-Noise Avg Value - {transit_signal_to_noise_avg}")
 
 print(f"Stellar Effective Temperature Max Value - {stellar_effective_temperature_max} K")
 print(f"Stellar Effective Temperature Min Value - {stellar_effective_temperature_min} K")
+print(f"Stellar Effective Temperature Avg Value - {stellar_effective_temperature_avg} K")
 
 print(f"Stellar Surface Gravity Max Value - {insolation_flux_max} log10(cm/s**2)")
 print(f"Stellar Surface Gravity Min Value - {insolation_flux_min} log10(cm/s**2)")
+print(f"Stellar Surface Gravity Avg Value - {insolation_flux_avg} log10(cm/s**2)")
 
 print(f"Stellar Radius Max Value - {stellar_radius_max} Solar radii")
 print(f"Stellar Radius Min Value - {stellar_radius_min} Solar radii")
+print(f"Stellar Radius Avg Value - {stellar_radius_avg} Solar radii")
 
-print(f"RA Max Value - {stellar_radius_max} decimal degrees")
-print(f"RA Min Value - {stellar_radius_min} decimal degrees")
+print(f"RA Max Value - {ra_max} decimal degrees")
+print(f"RA Min Value - {ra_min} decimal degrees")
+print(f"RA Avg Value - {ra_avg} decimal degrees")
 
-print(f"Dec Max Value - {stellar_radius_max} decimal degrees")
-print(f"Dec Min Value - {stellar_radius_min} decimal degrees")
+print(f"Dec Max Value - {dec_max} decimal degrees")
+print(f"Dec Min Value - {dec_min} decimal degrees")
+print(f"Dec Avg Value - {dec_avg} decimal degrees")
 
-print(f"Kepler-band Max Value - {stellar_radius_max} mag")
-print(f"Kepler-band Min Value - {stellar_radius_min} mag")
-
-
-
-
-# Averages
+print(f"Kepler-band Max Value - {kepler_band_max} mag")
+print(f"Kepler-band Min Value - {kepler_band_min} mag")
+print(f"Kepler-band Avg Value - {kepler_band_avg} mag")
 
 # Standard Devation
 
