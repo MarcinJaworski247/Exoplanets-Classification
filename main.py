@@ -2,6 +2,7 @@ import csv
 from itertools import islice
 import random
 from random import randrange
+import statistics
 
 # --------------------- DATA PREPARATION ---------------------------------
 title = ""
@@ -414,6 +415,15 @@ print(f"Kepler-band Min Value - {kepler_band_min} mag")
 print(f"Kepler-band Avg Value - {kepler_band_avg} mag")
 
 # Standard Devation
+
+orbital_period_standard_deviation = 0
+orbital_period_values = []
+for obj in detected_objects:
+    for col in obj:
+        if col == "Orbital Period [days]":
+            orbital_period_values.append(float(obj.get(col)))
+
+print(f"Orbital Period standard deviation - {statistics.stdev(orbital_period_values)}")
 
 # Median of Variables
 
