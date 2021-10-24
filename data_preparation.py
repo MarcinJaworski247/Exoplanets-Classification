@@ -24,6 +24,10 @@ def fillEmptyCells(df):
     return df
 
 
+def getClassColumn(df):
+    return df.koi_disposition
+
+
 def dropNotNessesaryColumns(df):
     df.drop(["loc_rowid", "kepid", "koi_pdisposition", "koi_score",
              "koi_tce_plnt_num", "koi_tce_delivname"], axis=1, inplace=True)

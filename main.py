@@ -1,10 +1,8 @@
 import pandas as pd
-from matplotlib import pyplot as plt
-import numpy as np
-from random import randrange
 
 import data_preparation as data_prep
 import statistics as stats
+import plots
 
 
 # csv file name
@@ -17,12 +15,16 @@ df = pd.read_csv(file_name, skiprows=31)
 df = data_prep.dropNotNessesaryColumns(df)
 
 # convert CONFIRMED and FALSE POSITIVE to 1 and 0
-# df.koi_disposition[df.koi_disposition == "CONFIRMED"] = 1
-# df.koi_disposition[df.koi_disposition == "FALSE POSITIVE"] = 0
+df.koi_disposition.loc[(df.koi_disposition == "CONFIRMED")] = 1
+df.koi_disposition.loc[(df.koi_disposition == "FALSE POSITIVE")] = 0
+
+
+# df.astype({"koi_disposition": "float64"}).dtypes
 
 # delete CANDIDATES
 df = data_prep.deleteCandidates(df)
 
+class_column = data_prep.getClassColumn(df)
 # check if some column have more than 50% empty cells. if so delete it
 # print(df.isna().sum())
 # df = df.loc[:, df.isin([None, 'NULL', 0]).mean() < .5]
@@ -70,11 +72,26 @@ quantiles_01 = stats.getQuantiles(statistic_data, 0.1)
 quantiles_09 = stats.getQuantiles(statistic_data, 0.9)
 
 # outliers detection
-
-
 for col in statistic_data.columns:
     stats.detectOutliers(statistic_data, col)
 
 
 # Pearson linear correlation between columns
-all_cols_corr = statistic_data.corr()
+stats.findPearsonLinearCorrelation(statistic_data)
+
+stats.findPearsonLinearCorrelationWithClass(statistic_data, class_column)
+
+# simple linear regression between two columns
+# r_sq = stats.simpleLinearRegression(
+#     statistic_data.koi_period, statistic_data.koi_impact)
+# print(f"Regression score between [koi_period] and [koi_impact]: {r_sq}")
+
+r_sq = stats.simpleLinearRegression(
+    statistic_data.koi_period, statistic_data.koi_impact)
+
+
+# histograms TO DO fix
+# plots.showHistogram(df.koi_prad)
+
+# boxplot
+plots.showBoxplot(df.koi_prad)
