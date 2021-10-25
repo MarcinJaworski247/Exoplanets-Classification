@@ -29,7 +29,7 @@ def getClassColumn(df):
 
 
 def dropNotNessesaryColumns(df):
-    df.drop(["loc_rowid", "kepid", "koi_pdisposition", "koi_score",
+    df.drop(["kepoi_name", "kepler_name", "loc_rowid", "kepid", "koi_pdisposition", "koi_score",
              "koi_tce_plnt_num", "koi_tce_delivname"], axis=1, inplace=True)
     return df
 
@@ -41,5 +41,5 @@ def deleteCandidates(df):
 
 def getStatisticsColumns(df):
     df.drop(["koi_fpflag_nt", "koi_fpflag_co", "koi_fpflag_ec",
-            "koi_fpflag_nt", "kepoi_name", "kepler_name", "koi_disposition"], axis=1, inplace=True)
+            "koi_fpflag_ss", "koi_disposition"], axis=1, inplace=True)
     return df
