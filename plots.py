@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 
 
 def showHistograms(df):
-    df.hist()
+    df.hist(density=True)
     plt.title("Variables histogram")
     plt.show()
 
