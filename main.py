@@ -1,8 +1,9 @@
 import pandas as pd
 import data_preparation as data_prep
 import statistics as stats
-import plots
 import file_operations as fp
+import random_forest as rf
+import plots
 
 # ---------------------------- DATA PREPARATION --------------------------------------------
 
@@ -35,15 +36,14 @@ df = data_prep.fillEmptyCells(df)
 statistic_data = data_prep.getStatisticsColumns(df)
 
 
-# outliers detection
-# outl = stats.detectOutliers(statistic_data)
-
 # save prepared data to csv file
 fp.savePreparedData(df, "prepared_data")
 
 
 # ---------------------------- STATISTICAL ANALYSIS ----------------------------------------
 
+# outliers detection
+# outl = stats.detectOutliers(statistic_data)
 
 # min - max
 
@@ -94,22 +94,22 @@ fp.saveDictionary(class_corr, "pearson_correlation_with_class.csv",
 
 # simple linear regression between two columns
 # koi_prad - koi_impact
-r_sq_1 = stats.simpleLinearRegression(
-    statistic_data.koi_prad, statistic_data.koi_impact)
-print(f"Regression score between [koi_prad] and [koi_impact]: {r_sq_1}")
-# koi_time0bk - koi_period
-r_sq_2 = stats.simpleLinearRegression(
-    statistic_data.koi_time0bk, statistic_data.koi_period)
-print(f"Regression score between [koi_time0bk] and [koi_period]: {r_sq_2}")
-# koi_insol - koi_srad
-r_sq_3 = stats.simpleLinearRegression(
-    statistic_data.koi_insol, statistic_data.koi_srad)
-print(f"Regression score between [koi_insol] and [koi_srad]: {r_sq_3}")
-# koi_teq - koi_disposition
-r_sq_4 = stats.simpleLinearRegression(
-    statistic_data.koi_teq, class_column)
-print(
-    f"Regression score between [koi_koi_teqinsol] and [koi_disposition]: {r_sq_4}")
+# r_sq_1 = stats.simpleLinearRegression(
+#     statistic_data.koi_prad, statistic_data.koi_impact)
+# print(f"Regression score between [koi_prad] and [koi_impact]: {r_sq_1}")
+# # koi_time0bk - koi_period
+# r_sq_2 = stats.simpleLinearRegression(
+#     statistic_data.koi_time0bk, statistic_data.koi_period)
+# print(f"Regression score between [koi_time0bk] and [koi_period]: {r_sq_2}")
+# # koi_insol - koi_srad
+# r_sq_3 = stats.simpleLinearRegression(
+#     statistic_data.koi_insol, statistic_data.koi_srad)
+# print(f"Regression score between [koi_insol] and [koi_srad]: {r_sq_3}")
+# # koi_teq - koi_disposition
+# r_sq_4 = stats.simpleLinearRegression(
+#     statistic_data.koi_teq, class_column)
+# print(
+#     f"Regression score between [koi_koi_teqinsol] and [koi_disposition]: {r_sq_4}")
 
 # ---------------------------- DATA VISUALIZING --------------------------------------------
 
@@ -125,9 +125,9 @@ print(
 # plots.showPearsonRegression(statistic_data)
 
 # boxplot
-plots.showBoxplot(statistic_data, "ra")
-plots.showBoxplot(statistic_data, "koi_kepmag")
-plots.showBoxplot(statistic_data, "koi_steff")
+# plots.showBoxplot(statistic_data, "ra")
+# plots.showBoxplot(statistic_data, "koi_kepmag")
+# plots.showBoxplot(statistic_data, "koi_steff")
 
 # Simple linear regression with scatterplot
 # koi_prad - koi_impact
@@ -142,3 +142,7 @@ plots.showBoxplot(statistic_data, "koi_steff")
 # # koi_teq - koi_disposition
 # plots.showSimpleLinearRegression(
 #     statistic_data.koi_teq, class_column)
+
+
+# ---------------------------- DATA EXPLORATION ------------------------------------------
+rf.classify(df)

@@ -50,14 +50,22 @@ def getQuantiles(data, range):
     return result
 
 
-# def detectOutliers(data):
-#     Q1 = data.quantile(0.25)
-#     Q3 = data.quantile(0.75)
-#     IQR = Q3 - Q1
-#     lower_range = Q1 - 1.5 * IQR
-#     upper_range = Q3 + 1.5 * IQR
-#     # print(data < lower_range | data > upper_range)
-#     print(data < (Q1 - 1.5 * IQR)) | (data > (Q3 + 1.5 * IQR))
+def detectOutliers(columns):
+    counter = 0
+    for col in columns:
+        data = columns[col]
+        Q1 = data.quantile(0.25)
+        Q3 = data.quantile(0.75)
+        IQR = Q3 - Q1
+        lower_range = Q1 - 1.5 * IQR
+        upper_range = Q3 + 1.5 * IQR
+
+        name = col
+        for val in data:
+            if val < lower_range or val > upper_range:
+                print(f"Attribute: {name}, Value: {val}")
+                counter = counter + 1
+        print(f"Amount of outliers: {counter}")
 
 
 def findPearsonLinearCorrelation(statistic_data):

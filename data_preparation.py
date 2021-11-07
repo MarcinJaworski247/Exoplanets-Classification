@@ -40,6 +40,6 @@ def deleteCandidates(df):
 
 
 def getStatisticsColumns(df):
-    df.drop(["koi_fpflag_nt", "koi_fpflag_co", "koi_fpflag_ec",
-            "koi_fpflag_ss", "koi_disposition"], axis=1, inplace=True)
-    return df
+    res = df.drop(["koi_fpflag_nt", "koi_fpflag_co", "koi_fpflag_ec",
+                   "koi_fpflag_ss", "koi_disposition"], axis=1)
+    return res
