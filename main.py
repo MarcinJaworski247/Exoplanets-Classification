@@ -132,17 +132,18 @@ fp.saveDictionary(class_corr, "pearson_correlation_with_class.csv",
 # Simple linear regression with scatterplot
 # koi_prad - koi_impact
 # plots.showSimpleLinearRegression(
-#     statistic_data.koi_prad, statistic_data.koi_impact)
+#     statistic_data.koi_prad, statistic_data.koi_impact, "koi_prad", "koi_impact")
 # # koi_time0bk - koi_period
 # plots.showSimpleLinearRegression(
-#     statistic_data.koi_time0bk, statistic_data.koi_period)
+#     statistic_data.koi_time0bk, statistic_data.koi_period, "koi_time0bk", "koi_period")
 # # koi_insol - koi_srad
 # plots.showSimpleLinearRegression(
-#     statistic_data.koi_insol, statistic_data.koi_srad)
+#     statistic_data.koi_insol, statistic_data.koi_srad, "koi_insol", "koi_srad")
 # # koi_teq - koi_disposition
 # plots.showSimpleLinearRegression(
-#     statistic_data.koi_teq, class_column)
+#     statistic_data.koi_teq, class_column, "koi_teq", "koi_disposition")
 
 
 # ---------------------------- DATA EXPLORATION ------------------------------------------
-rf.classify(df)
+# rf.classify(df)
+rf.classifyWithKFold(df, 100)

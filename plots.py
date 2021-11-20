@@ -56,7 +56,7 @@ def showPearsonRegressionWithClass(class_corr_dict):
 # Simple linear regression between two columns and scatterplot (wykres rozrzutu)
 
 
-def showSimpleLinearRegression(col_x, col_y):
+def showSimpleLinearRegression(col_x, col_y, attr_1, attr_2):
     x = np.array(col_x).reshape((-1, 1))
     y = np.array(col_y).reshape((-1, 1))
     model = LinearRegression()
@@ -64,6 +64,12 @@ def showSimpleLinearRegression(col_x, col_y):
     y_pred = model.predict(x)
     plt.scatter(x, y, color="red")
     plt.plot(x, y_pred, color="green")
+
+    print(model.coef_)
+    print(model.intercept_)
+    title = f"{attr_1} - {attr_2} (y = {model.coef_[0][0]}*x + ({model.intercept_[0]}))"
+    plt.title(title)
+
     plt.show()
 
 # Variables values

@@ -1,9 +1,15 @@
+from random import Random
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
+from sklearn.model_selection import KFold
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score
 import pandas as pd
+from numpy import mean
 from sklearn.tree import export_graphviz
 import os
+from sklearn.model_selection import cross_validate
 
 
 def classify(df):
@@ -53,10 +59,10 @@ def classify(df):
     print(feature_imp)
 
     # visualize trees
-    feature_names = X.columns
-    class_name = 'koi_disposition'
-    for i in range(0, len(model.estimators_)):
-        visualizeTree(model.estimators_[i], i, feature_names, class_name)
+    # feature_names = X.columns
+    # class_name = 'koi_disposition'
+    # for i in range(0, len(model.estimators_)):
+    #     visualizeTree(model.estimators_[i], i, feature_names, class_name)
 
 
 def visualizeTree(estimator, number, featurenames, classname):
@@ -65,3 +71,21 @@ def visualizeTree(estimator, number, featurenames, classname):
     export_graphviz(estimator, out_file=f"tree-{number}.dot", feature_names=featurenames,
                     class_names=classname, rounded=True, proportion=False, precision=2, filled=True)
     os.system(f'dot -Tpng tree-{number}.dot -o tree-{number}.png')
+
+
+def classifyWithKFold(df, foldsNumber):
+    # class variable
+    Y = df.koi_disposition.values
+    Y = Y.astype('int')
+
+    # independent variables
+    X = df.drop(labels=['koi_disposition'], axis=1)
+
+    # random forest model
+    model = RandomForestClassifier(random_state=1)
+
+    # train and evaluate a model using k-fold cross validation
+    cv = cross_validate(model, X, Y, cv=foldsNumber)
+
+    # print mean accuracy score of k-folds evaluations
+    print(cv["test_score"].mean())
